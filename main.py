@@ -1,3 +1,11 @@
+# pip3 install kivy
+# pip3 install numpy
+# pip3 install opencv-python
+
+# Eto na pinaka simple kong Code dun, kesa umabot ilang Line HAHAHA ayos na toh
+# Ung Text to Speech na stop sya kada magsasalita, pero pede nmn yan ilagay sa ibang thread, dun sya magsalita
+# Diko na nilagay antok nako.
+
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.core.window import Window
@@ -20,6 +28,9 @@ import cv2
 Window.size = (600, 600)
 class MainObjectDetector(Widget):
     
+    # Gumamit ako ng pre trained model
+    # Para di nako gumamit ng Machine Learning
+    # Alam ko meron na kau nun HAHA
     PrototxtPath = "Model.prototxt"
     ModelPath = "Model.caffemodel"
     MinimumConfidence = 0.5
@@ -106,7 +117,7 @@ class MainObjectDetector(Widget):
         self._image.size = (self._width_, self._height_)
         self._image.pos = (Window.width/2 - self._width_/2, Window.height/2-self._height_/2)
         self._image.texture = self.convertCvtoImageTexture(image)        
-        
+
     def displayImage(self) -> None:
         self._image = Image(size=(300, 300), pos=(0, 0))
         self.add_widget(Label(text="Weak Camera Object Detector", pos=(Window.width/2-50, Window.height-100)))
