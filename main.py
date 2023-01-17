@@ -46,7 +46,7 @@ class MainObjectDetector(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.detectPerSecond = 1
+        self.detectPerSecond = 0.5
         self.framePerSecond = 30
         
         # Set Tha Random Seed Statically
@@ -60,9 +60,6 @@ class MainObjectDetector(Widget):
         self.startApplication()
 
     def convertCvtoImageTexture(self, image: cv2) -> Texture:
-        """
-            Convert CV Image to Texture
-        """
         _image_bytes = image.tobytes()[::-1]
         _texture = Texture.create(size=(self._width_, self._height_), colorfmt="rgb")
         _texture.blit_buffer(_image_bytes, bufferfmt="ubyte", colorfmt="rgb")
@@ -77,7 +74,7 @@ class MainObjectDetector(Widget):
         _, image = self._cap.read()
         self._height_, self._width_ = image.shape[0], image.shape[1]
         
-        # Paglaruan nio kau bahala HAHAHA
+        # Paglaruan nio kau bahala HAHAHA Eto ung nag tetest sa caffeModel na provided d2
         self._net.setInput(cv2.dnn.blobFromImage(cv2.resize(image, (300, 300)), 0.005, (300, 300), 130))
         detected_objects = self._net.forward()
         
@@ -104,12 +101,12 @@ class MainObjectDetector(Widget):
         # Every 0.5 Second check if all detected list have been changed.
         self.detectPerSecond -= 1 / self.framePerSecond
         if self.detectPerSecond <= 0:
-            self.detectPerSecond = 0.5
             for index, num in enumerate(self.allDetectedObject):
                 if num != self.oldDetectedObject[index] and num:
                     speaker = win32com.client.Dispatch("SAPI.SpVoice")
                     speaker.Speak(f"{num}: {self.CLASSES[index]}")
-                    
+            
+            self.detectPerSecond = 0.5
             self.oldDetectedObject = self.allDetectedObject
 
         # Update Image Texture, Since para mapagana sa CP toh, ginawa ko nlng syang Texture
